@@ -10,7 +10,7 @@ import os  # Import os to set environment variables
 
 try:
     from pgzero.actor import Actor
-except ImportError:
+except ImportError(Actor):
     # If pgzrun is not installed, skip these tests at the module level.
     pytest.skip("Pygame Zero (pgzrun) not installed or Actor not found, skipping all tests in this file.",
                 allow_module_level=True)
