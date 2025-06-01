@@ -33,13 +33,13 @@ def time_up():
 def update():
     global score
     
-    if keyboard.a:
+    if keyboard.a or keyboard.right :
         fox.x = fox.x - 5
-    elif keyboard.d:
+    elif keyboard.d or keyboard.left:
         fox.x = fox.x + 5
-    elif keyboard.w:
+    elif keyboard.w or keyboard.up:
         fox.y = fox.y - 5
-    elif keyboard.s:
+    elif keyboard.s or keyboard.down:
         fox.y = fox.y + 5
 
     coin_collected = fox.colliderect(coin)
