@@ -19,8 +19,8 @@ except ImportError(Actor):
 WIDTH_TEST = 400
 HEIGHT_TEST = 400
 
+# Contains game state and logic for testing.
 class GameTestContext:
-    # Contains game state and logic for testing.
     def __init__(self, width, height):
         self.score = 0
         self.width = width
@@ -46,10 +46,9 @@ class GameTestContext:
             self.score += 10
             self.place_coin()
 
-
+# Pytest fixture to set up and tear down the Pygame environment and provide a GameTestContext instance.
 @pytest.fixture
 def game_context():
-    # Pytest fixture to set up and tear down the Pygame environment and provide a GameTestContext instance.
     # Set the SDL_VIDEODRIVER to dummy BEFORE pygame.init()
     os.environ['SDL_VIDEODRIVER'] = 'dummy'
 
