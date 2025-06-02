@@ -19,7 +19,6 @@ except ImportError(Actor):
 WIDTH_TEST = 400
 HEIGHT_TEST = 400
 
-
 class GameTestContext:
     """Encapsulates game state and logic for testing."""
 
@@ -48,13 +47,12 @@ class GameTestContext:
             self.score += 10
             self.place_coin()
 
-
+"""
+Pytest fixture to set up and tear down the Pygame environment
+and provide a GameTestContext instance.
+"""
 @pytest.fixture
 def game_context():
-    """
-    Pytest fixture to set up and tear down the Pygame environment
-    and provide a GameTestContext instance.
-    """
     # Set the SDL_VIDEODRIVER to dummy BEFORE pygame.init()
     os.environ['SDL_VIDEODRIVER'] = 'dummy'
 
@@ -80,14 +78,12 @@ def game_context():
     # Teardown: Quit Pygame after each test
     pygame.quit()
 
-
+# Test that the score is 0 when the game context is initialized.
 def test_initial_score_is_zero(game_context):
-    """Test that the score is 0 when the game context is initialized."""
     assert game_context.score == 0, "Initial score should be 0."
 
-
+# Test that the score increases by 10 when the fox collides with the coin.
 def test_score_increases_on_collision(game_context):
-    """Test that the score increases by 10 when the fox collides with the coin."""
     # Position fox and coin to ensure they collide.
     game_context.fox.pos = (150, 150)
     game_context.coin.pos = (150, 150)
@@ -102,9 +98,8 @@ def test_score_increases_on_collision(game_context):
     assert (game_context.coin.x != initial_coin_pos_x or game_context.coin.y != initial_coin_pos_y), \
         "Coin should have been moved after collection."
 
-
+# Test that the score does not change if the fox and coin do not collide.
 def test_score_does_not_increase_if_no_collision(game_context):
-    """Test that the score does not change if the fox and coin do not collide."""
     # Position fox and coin far from each other
     game_context.fox.pos = (50, 50)
     game_context.coin.pos = (300, 300)
@@ -114,9 +109,8 @@ def test_score_does_not_increase_if_no_collision(game_context):
 
     assert game_context.score == initial_score, "Score should remain unchanged if no collision occurs."
 
-
+# Test that the score correctly accumulates over several coin collections.
 def test_score_accumulates_over_multiple_collections(game_context):
-    """Test that the score correctly accumulates over several coin collections."""
     # --- First collection ---
     game_context.fox.pos = (150, 150)  # Position for collision
     game_context.coin.pos = (150, 150)
