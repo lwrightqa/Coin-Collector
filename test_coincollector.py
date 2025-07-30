@@ -25,6 +25,8 @@ class GameTestContext:
         self.score = 0
         self.width = width
         self.height = height
+        self.time_left = 10
+        self.game_over = False
 
         # Actor initialization can fail if images are missing or Pygame isn't set up.
         # The fixture calling this constructor will handle exceptions.
@@ -33,6 +35,17 @@ class GameTestContext:
 
         self.coin = Actor("coin")
         self.coin.pos = 200, 200
+
+    def update(self, dt):
+        # A method to simulate the game's main update loop
+        if not self.game_over:
+            self.time_left -= dt
+            if self.time_left <= 0:
+                self.game_over = True
+                self.time_left = 0
+
+            # You could also call your score logic from here
+            self.update_score_logic()
 
     def place_coin(self):
         # Simulates placing the coin within test boundaries.
@@ -48,6 +61,7 @@ class GameTestContext:
 
 # Pytest fixture to set up and tear down the Pygame environment and provide a GameTestContext instance.
 @pytest.fixture
+
 def game_context():
     # Set the SDL_VIDEODRIVER to dummy BEFORE pygame.init()
     os.environ['SDL_VIDEODRIVER'] = 'dummy'
