@@ -1,8 +1,24 @@
-.pytest/
-venv/
-.idea/
-.pytest_cache/
+# Byte-compiled / optimized / DLL files
 __pycache__/
-/coincollector.spec
-/build/
-/dist/
+
+# Virtual Environment
+# Use a wildcard to catch variations like 'venv', '.venv', etc.
+venv/
+.venv/
+env/
+
+# IDE and Editor Folders
+.idea/      # PyCharm
+.vscode/    # Visual Studio Code
+
+# Unit Test & Coverage Reports
+.pytest_cache/
+.coverage
+
+# Build artifacts (e.g., from PyInstaller)
+build/
+dist/
+*.spec
+
+# Environment variables
+.env
