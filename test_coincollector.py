@@ -10,7 +10,7 @@ import os  # Import os to set environment variables
 
 try:
     from pgzero.actor import Actor
-except ImportError(Actor):
+except ImportError:
     # If pgzrun is not installed, skip these tests at the module level.
     pytest.skip("Pygame Zero (pgzrun) not installed or Actor not found, skipping all tests in this file.",
                 allow_module_level=True)
@@ -88,10 +88,26 @@ def game_context():
     # Teardown: Quit Pygame after each test
     pygame.quit()
 
+
+# --- Initialization and Setup Tests ---
+
 def test_initial_score_is_zero(game_context):
     # Test that the score is 0 when the game context is initialized.
     assert game_context.score == 0, "Initial score should be 0."
 
+def test_place_coin_within_bounds(game_context):
+    # Test that place_coin() places the coin within the specified boundaries.
+    min_coord = 20
+    max_x = game_context.width - 20
+    max_y = game_context.height - 20
+
+    for _ in range(100):  # Run multiple times to check the random placement
+        game_context.place_coin()
+        assert min_coord <= game_context.coin.x <= max_x, "Coin x-position is out of bounds."
+        assert min_coord <= game_context.coin.y <= max_y, "Coin y-position is out of bounds."
+
+
+# ---
 def test_score_increases_on_collision(game_context):
     # Test that the score increases by 10 when the fox collides with the coin.
     # Position fox and coin to ensure they collide.
@@ -137,3 +153,54 @@ def test_score_accumulates_over_multiple_collections(game_context):
     game_context.fox.pos = game_context.coin.pos
     game_context.update_score_logic()
     assert game_context.score == 30, "Score should be 30 after the third collection."
+
+def test_game_over_when_time_runs_out(game_context):
+    # Test that the game_over flag is set when time_left reaches 0.
+    assert not game_context.game_over, "Game should not be over at the start."
+
+    game_context.update(dt=11)  # Simulate 11 seconds passing, more than the initial 10.
+
+    assert game_context.game_over, "Game should be over when time runs out."
+    assert game_context.time_left == 0, "Time left should be clamped to 0."
+
+def test_no_score_increase_after_game_over(game_context):
+    # Test that score does not increase after the game is over.
+    # Position for a collision to happen on the frame the game ends.
+    game_context.fox.pos = game_context.coin.pos
+
+    # Run update to end the game. Score will increase on this frame.
+    game_context.update(dt=11)
+    assert game_context.score == 10, "Score should increase on the final frame."
+    assert game_context.game_over is True, "Game should be over."
+
+    # Now that game is over, try to score again.
+    # Move fox to the new coin position for another collision.
+    game_context.fox.pos = game_context.coin.pos
+    game_context.update(dt=1)  # Simulate another second passing
+
+    # The score should not have increased again.
+    assert game_context.score == 10, "Score should not increase after game is over."
+
+def test_place_coin_within_bounds(game_context):
+    # Test that place_coin() places the coin within the specified boundaries.
+    min_coord = 20
+    max_x = game_context.width - 20
+    max_y = game_context.height - 20
+
+    for _ in range(100):  # Run multiple times to check the random placement
+        game_context.place_coin()
+        assert min_coord <= game_context.coin.x <= max_x, "Coin x-position is out of bounds."
+        assert min_coord <= game_context.coin.y <= max_y, "Coin y-position is out of bounds."
+
+def test_collision_at_edges(game_context):
+    # Test that collision is detected correctly at the very edge of the actors.
+    game_context.fox.pos = (200, 200)
+    touching_x = game_context.fox.x + (game_context.fox.width / 2) + (game_context.coin.width / 2)
+
+    # Position 1: Barely overlapping
+    game_context.coin.pos = (touching_x - 1, game_context.fox.y)
+    assert game_context.fox.colliderect(game_context.coin), "Collision should be detected when actors are overlapping by one pixel."
+
+    # Position 2: Adjacent, not overlapping
+    game_context.coin.pos = (touching_x + 1, game_context.fox.y)
+    assert not game_context.fox.colliderect(game_context.coin), "Collision should not be detected when actors are adjacent."
