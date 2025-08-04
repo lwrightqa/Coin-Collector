@@ -5,8 +5,10 @@ from random import randint
 
 WIDTH = 400
 HEIGHT = 400
+
 score = 0
 game_over = False
+game_started = False
 time_left = 10
 
 fox = Actor("fox")
@@ -24,7 +26,7 @@ def draw():
 
     if game_over:
         screen.fill("orange") #changed from pink to orange
-        screen.draw.text("Final Score: " + str(score), topleft=(10, 10), fontsize = 60)
+        screen.draw.text("Final Score: " + str(score), center=(WIDTH/2, HEIGHT/2), fontsize = 60, color="black")
 
 def place_coin():
     coin.x = randint(20, (WIDTH - 20))
@@ -36,16 +38,19 @@ def time_up():
 
 def update(dt):
 # dt = delta time
-    global score, game_over, time_left
+    global score, game_over, time_left, game_started
 
     if not game_over:
-        if keyboard.a:
+        if keyboard.w or keyboard.a or keyboard.s or keyboard.d or keyboard.up or keyboard.down or keyboard.left or keyboard.right:
+            game_started = True
+
+        if keyboard.a or keyboard.left:
             fox.x = fox.x - 5
-        elif keyboard.d:
+        elif keyboard.d or keyboard.right:
             fox.x = fox.x + 5
-        elif keyboard.w:
+        elif keyboard.w or keyboard.up:
             fox.y = fox.y - 5
-        elif keyboard.s:
+        elif keyboard.s or keyboard.down:
             fox.y = fox.y + 5
 
     coin_collected = fox.colliderect(coin)
@@ -53,11 +58,11 @@ def update(dt):
         score = score + 10
         place_coin()
 
-    time_left = time_left - dt
-    if time_left <= 0:
-        game_over = True
-        time_left = 0
-
+    if game_started and not game_over:
+        time_left = time_left - dt
+        if time_left <= 0:
+            game_over = True
+            time_left = 0
 place_coin()
 
 pgzrun.go()

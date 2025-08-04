@@ -6,21 +6,21 @@ This project is based on an example from the book *"Coding Games in Python"* by 
 
 ![Gameplay Screenshot](images/gameplay.png)
 ## Features
-
-- **Player Control**: Move the fox using the `W`, `A`, `S`, and `D` keys.
 - **Scoring**: Gain 10 points for every coin collected.
 - **Countdown Timer**: The game lasts for 10 seconds.
 - **Game Over**: A final score screen is displayed when time runs out.
 - **Unit Tests**: The project includes a test suite using `pytest` to verify game logic.
-
+## Controls
+You can control the fox using either the WASD keys or the Arrow Keys.
+- Move Up: `W` or `Up Arrow`
+- Move Down: `S` or `Down Arrow` 
+- Move Left: `A` or `Left Arrow`
+- Move Right: `D` or `Right Arrow`
 ## Requirements
-
 - Python 3.x
 - Pygame Zero
 - Pytest (for running the tests)
-
 ## Installation
-
 1.  **Clone or download the repository:**
     If you have Git, you can clone it. Otherwise, download the project files as a ZIP.
 
@@ -58,7 +58,7 @@ pytest
 
 ## Project Structure
 
-The project is structured to separate game code from tests, which is a standard practice for maintainable software.
+The project is structured to separate game code from tests.
 
 ```
 CoinCollector/
