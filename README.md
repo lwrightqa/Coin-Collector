@@ -39,7 +39,7 @@ For a simpler way to play without installing Python, you can download a pre-buil
 
 1.  Go to the repository's **Releases** tab.
 2.  Download `coincollector.exe` (only tested on Windows).
-3.  Run the downloaded file to play.
+3.  Run the downloaded file to play. **Note** Windows Defender might yell at you when you run the .exe because I haven't bought a signing certificate from Microsoft. This is malware-free. That's just my word you're going on.
 
 ## How to Play
 To run the game, execute the `coincollector.py` script using the `pgzrun` command in your terminal from the project's root directory:
